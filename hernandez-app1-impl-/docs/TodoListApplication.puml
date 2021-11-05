@@ -1,0 +1,81 @@
+@startuml
+
+class TodoListApplication{
+    'methods
+    + main(String [] args)
+    + start(Stage stage)
+}
+
+class toDoListController{
+    'attributes
+    - DatePicker dateButton
+    - TextField eventTextButton
+    - ListView<?> toDoEventList
+    - ObservableList<?> list
+    - toDoList items
+
+    'methods
+    + toDoListController()
+
+    +addEvent(ActionEvent event) : void
+    +guideUser(ActionEvent event)) : void
+    +deleteAllToDoListItems(ActionEvent event):void
+    +deleteToDoList((ActionEvent event) : void
+    +deleteToDoList(ActionEvent event):void
+    +displayAllEvents(ActionEvent event):void
+    +displayCompletedEvents(ActionEvent event):void
+    +displayIncompletedEvents(ActionEvent event):void
+    +editEventDescription(ActionEvent event):void
+    +editEventDueDate(ActionEvent event):void
+    +loadList(ActionEvent event):void
+    +markEventComplete(ActionEvent event):void
+    +saveList(ActionEvent event):void
+}
+
+Application --o toDoListController
+
+class toDoList{
+    'attributes
+    -List<events> itemList
+
+    'methods
+    +toDoList()
+
+    +addEvent(event) : void
+    +deleteEvent(int) : void
+    +clearList(void) : void
+    +changeDescription(int, String) : void
+    +changeDate(int, String) : void
+    +changeItemComplete(int) : void
+    +getList(void) : ArrayList<events>
+    +saveList(string) : void
+    +loadList(File) : void
+}
+
+class events{
+    'attributes
+    - String nameEvent
+    - String description
+    - String dueDate
+    - Boolean completed
+
+    'methods
+    + events(String, String, String, String)
+    + events(String, String, String)
+
+    +setCompleted(Boolean) : void
+    +setDueDate(String) : void
+    +setNameEvent(String): void
+    +setDescription(String) : void
+    +getCompleted(void) : Boolean
+    +getNameEvent(void) : String
+    +getDescription(void) : String
+    +getDueDate(void): String
+    +toString(void) : String
+}
+
+toDoList --* Event
+
+toDoListController --o toDoList
+
+@enduml
