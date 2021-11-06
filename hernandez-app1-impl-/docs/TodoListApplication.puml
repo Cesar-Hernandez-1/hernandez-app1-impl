@@ -32,7 +32,7 @@ class toDoListController{
     +saveList(ActionEvent event):void
 }
 
-Application --o toDoListController
+TodoListApplication --o toDoListController
 
 class toDoList{
     'attributes
@@ -54,7 +54,7 @@ class toDoList{
 
 class events{
     'attributes
-    - String nameEvent
+    - final String nameEvent
     - String description
     - String dueDate
     - Boolean completed
@@ -65,7 +65,6 @@ class events{
 
     +setCompleted(Boolean) : void
     +setDueDate(String) : void
-    +setNameEvent(String): void
     +setDescription(String) : void
     +getCompleted(void) : Boolean
     +getNameEvent(void) : String
@@ -74,7 +73,7 @@ class events{
     +toString(void) : String
 }
 
-toDoList --* Event
+toDoList --* events
 
 toDoListController --o toDoList
 
