@@ -1,3 +1,8 @@
+/*
+ *  UCF COP3330 Fall 2021 Application Assignment 1 Solution
+ *  Copyright 2021 Cesar Hernandez
+ */
+
 package assignments;
 
 import java.io.*;
@@ -18,6 +23,10 @@ public class toDoList {
         itemList.add(listEvent);
     }
 
+    public events getEvent(int index){
+        //return "events" object in list at given index
+        return itemList.get(index);
+    }
     public void deleteEvent(int event){
         //remove the "events" object at the received index
         itemList.remove(event);
@@ -42,12 +51,33 @@ public class toDoList {
 
     public void changeItemComplete(int eventIndex){
         //use "events" object at received index method setCompleted to change completed status to opposite boolean value
-        itemList.get(eventIndex).setCompleted(!itemList.get(eventIndex).getCompleted());
+        boolean completedStatus = itemList.get(eventIndex).getCompleted();
+        itemList.get(eventIndex).setCompleted(!completedStatus);
     }
 
     public List<events> getList(){
         //return the ArrayList of "events"
         return itemList;
+    }
+
+    public List<events> getCompletedList(){
+        ArrayList<events> completedItems = new ArrayList<>();
+        for(events item : itemList){
+            if(item.getCompleted()){
+                completedItems.add(item);
+            }
+        }
+        return completedItems;
+    }
+
+    public List<events> getIncompletedList(){
+        ArrayList<events> incompletedItems = new ArrayList<>();
+        for(events item : itemList){
+            if(!item.getCompleted()){
+                incompletedItems.add(item);
+            }
+        }
+        return incompletedItems;
     }
 
     public void saveList(String saveFile) throws IOException{

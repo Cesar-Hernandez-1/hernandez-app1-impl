@@ -44,10 +44,13 @@ class toDoList{
     +addEvent(event) : void
     +deleteEvent(int) : void
     +clearList(void) : void
+    +getEvent(int) : events
+    +getCompletedList(void) : List<events>
+    +getIncompletedList(void) : List<events>
     +changeDescription(int, String) : void
     +changeDate(int, String) : void
     +changeItemComplete(int) : void
-    +getList(void) : ArrayList<events>
+    +getList(void) : List<events>
     +saveList(string) : void
     +loadList(File) : void
 }

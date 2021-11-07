@@ -41,6 +41,12 @@ public class toDoListController {
 
     @FXML
     void addEvent(ActionEvent event) throws IOException {
+
+        //if no event name is provided, no event to be made and exit method.
+        if(eventTextButton.getText().isEmpty()){
+            return;
+        }
+
         //when add event button pressed
         //Date picker value is optional
         //check if event title text field is filled
@@ -157,11 +163,7 @@ public class toDoListController {
         //traverse through event list of current list object using enhanced for loop
         //if item's completed flag is true, then set item in observable list
         //if flag is not set as true, then set item as invisible to user's screen
-        for(events item : items.getList()){
-            if(item.getCompleted()){
-                completedList.add(item);
-            }
-        }
+        completedList.addAll(items.getCompletedList());
         //display all observable list items in listview
         toDoEventList.setItems(completedList);
     }
@@ -172,11 +174,7 @@ public class toDoListController {
         //traverse through event list of current list object using enhanced for loop
         //if item's completed flag is true, then set item as invisible to user's screen
         //if flag is not set as true, then set item in observable list
-        for(events item : items.getList()){
-            if(!item.getCompleted()){
-                incompletedList.add(item);
-            }
-        }
+        incompletedList.addAll(items.getIncompletedList());
         //display all observable list items in listview
         toDoEventList.setItems(incompletedList);
     }
