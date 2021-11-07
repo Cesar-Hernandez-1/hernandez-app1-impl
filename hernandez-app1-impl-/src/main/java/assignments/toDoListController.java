@@ -21,6 +21,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class toDoListController {
@@ -35,8 +37,8 @@ public class toDoListController {
     private ListView<assignments.events> toDoEventList;
 
     //create observable list to display data event objects
-    ObservableList<events> list = FXCollections.observableArrayList();
-    toDoList items = new toDoList();
+    private final listObserve manageList = new listObserve();
+    private final toDoList items = new toDoList();
 
 
     @FXML
@@ -72,13 +74,13 @@ public class toDoListController {
             items.addEvent(new events(dateButton.getValue().toString(), eventTextButton.getText(), returnDescription));
 
             //display item onto the observable listview.
-            list.add(new events(dateButton.getValue().toString(), eventTextButton.getText(), returnDescription));
-            toDoEventList.setItems(list);
+            manageList.addEvent(new events(dateButton.getValue().toString(), eventTextButton.getText(), returnDescription));
+            toDoEventList.setItems(manageList.getList());
         }//catch exception if no due date was provided, add string "No Due Date"
         catch (Exception e){
             items.addEvent(new events("No Due Date", eventTextButton.getText(), returnDescription));
-            list.add(new events("No Due Date", eventTextButton.getText(), returnDescription));
-            toDoEventList.setItems(list);
+            manageList.addEvent(new events("No Due Date", eventTextButton.getText(), returnDescription));
+            toDoEventList.setItems(manageList.getList());
         }
     }
 
@@ -101,10 +103,8 @@ public class toDoListController {
     void deleteAllToDoListItems(ActionEvent event){
         //clear all items from internal toDoList
         items.clearList();
-        //remove all items from observable listview
-        list.remove(0, list.size());
-        //display updated toDoList with no items inside
-        toDoEventList.setItems(list);
+        //update display
+        updateDisplay(items.getList());
     }
 
     @FXML
@@ -131,52 +131,44 @@ public class toDoListController {
         }
 
         //update listview to display the toDoList with the object removed
-        ObservableList<events> allList = FXCollections.observableArrayList();
-        allList.addAll(items.getList());
-
-        items.clearList();
-        list.remove(0, list.size());
-        toDoEventList.setItems(list);
-
-        for(events item : allList){
-            items.addEvent(item);
-        }
-        list.addAll(allList);
-        toDoEventList.setItems(allList);
+        updateDisplay(items.getList());
     }
 
     @FXML
     void displayAllEvents(ActionEvent event) {
         //when display all events option is selected
+        updateDisplay(items.getList());
         //create an observable list and use toDoList method to return all event objects in the list
-        ObservableList<events> allList = FXCollections.observableArrayList();
+            //ObservableList<events> allList = FXCollections.observableArrayList();
         //add all event objects into the observable list
-        allList.addAll(items.getList());
+            //allList.addAll(items.getList());
         //set listview to display all events in observable list
-        toDoEventList.setItems(allList);
+            //toDoEventList.setItems(allList);
     }
 
     @FXML
     void displayCompletedEvents(ActionEvent event) {
         //create an observable list to store all completed items
-        ObservableList<events> completedList = FXCollections.observableArrayList();
+        updateDisplay(items.getCompletedList());
+            //ObservableList<events> completedList = FXCollections.observableArrayList();
         //traverse through event list of current list object using enhanced for loop
         //if item's completed flag is true, then set item in observable list
         //if flag is not set as true, then set item as invisible to user's screen
-        completedList.addAll(items.getCompletedList());
+            //completedList.addAll(items.getCompletedList());
         //display all observable list items in listview
-        toDoEventList.setItems(completedList);
+            //toDoEventList.setItems(completedList);
     }
 
     @FXML
     void displayIncompletedEvents(ActionEvent event) {
-        ObservableList<events> incompletedList = FXCollections.observableArrayList();
+        updateDisplay(items.getIncompletedList());
+            //ObservableList<events> incompletedList = FXCollections.observableArrayList();
         //traverse through event list of current list object using enhanced for loop
         //if item's completed flag is true, then set item as invisible to user's screen
         //if flag is not set as true, then set item in observable list
-        incompletedList.addAll(items.getIncompletedList());
+            //incompletedList.addAll(items.getIncompletedList());
         //display all observable list items in listview
-        toDoEventList.setItems(incompletedList);
+            //toDoEventList.setItems(incompletedList);
     }
 
     @FXML
@@ -222,18 +214,7 @@ public class toDoListController {
         items.changeDescription(index, returnDescription);
 
         //update listview to display the new description on the selected event
-        ObservableList<events> allList = FXCollections.observableArrayList();
-        allList.addAll(items.getList());
-
-        items.clearList();
-        list.remove(0, list.size());
-        toDoEventList.setItems(list);
-
-        for(events item : allList){
-            items.addEvent(item);
-        }
-        list.addAll(items.getList());
-        toDoEventList.setItems(list);
+        updateDisplay(items.getList());
     }
 
     @FXML
@@ -274,18 +255,7 @@ public class toDoListController {
         items.changeDate(index, returnDate);
 
         //update listview to display the new date on the selected event
-        ObservableList<events> allList = FXCollections.observableArrayList();
-        allList.addAll(items.getList());
-
-        items.clearList();
-        list.remove(0, list.size());
-        toDoEventList.setItems(list);
-
-        for(events item : allList){
-            items.addEvent(item);
-        }
-        list.addAll(items.getList());
-        toDoEventList.setItems(list);
+        updateDisplay(items.getList());
     }
 
     @FXML
@@ -301,9 +271,7 @@ public class toDoListController {
             items.loadList(file);
 
             //replace current observable list in listview with the loaded toDoList
-            list.clear();
-            list.addAll(items.getList());
-            toDoEventList.setItems(list);
+            updateDisplay(items.getList());
         }
         //if file doesn't exist, display error message and end class method
         catch (Exception e){
@@ -337,18 +305,13 @@ public class toDoListController {
         //upon selection, set internal event flag's value to true for marked as complete
         items.changeItemComplete(index);
         //update observable list to display the item as complete
-        ObservableList<events> allList = FXCollections.observableArrayList();
-        allList.addAll(items.getList());
+        updateDisplay(items.getList());
+    }
 
-        items.clearList();
-        list.remove(0, list.size());
-        toDoEventList.setItems(list);
-
-        for(events item : allList){
-            items.addEvent(item);
-        }
-        list.addAll(allList);
-        toDoEventList.setItems(allList);
+    @FXML
+    void sortDueDate(ActionEvent event){
+        items.sortByDates();
+        updateDisplay(items.getList());
     }
 
     @FXML
@@ -384,5 +347,43 @@ public class toDoListController {
             stage.setScene(scene);
             stage.show();
         }
+    }
+
+    private void updateDisplay(List<events> update){
+        //update listview to display the new date on the selected event
+        //items.clearList();
+        manageList.removeEventIndexes(0, manageList.getSize());
+        //toDoEventList.setItems(manageList.getList());
+
+        manageList.addAllEvents(update);
+        toDoEventList.setItems(manageList.getList());
+    }
+}
+
+class listObserve{
+    private final ObservableList<events> list;
+
+    listObserve(){
+        list = FXCollections.observableArrayList();
+    }
+
+    public void addEvent(events item){
+        list.add(item);
+    }
+
+    public void removeEventIndexes(int start, int end){
+        list.remove(start, end);
+    }
+
+    public void addAllEvents(List<events> items){
+        list.addAll(items);
+    }
+
+    public int getSize(){
+        return list.size();
+    }
+
+    public ObservableList<events> getList(){
+        return list;
     }
 }

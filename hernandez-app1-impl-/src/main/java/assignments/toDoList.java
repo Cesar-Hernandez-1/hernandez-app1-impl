@@ -7,7 +7,9 @@ package assignments;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class toDoList {
     //create ArrayList object to store "events" inside
@@ -58,6 +60,17 @@ public class toDoList {
     public List<events> getList(){
         //return the ArrayList of "events"
         return itemList;
+    }
+
+    public void sortByDates(){
+        //traverse list and sort by due date
+        for(int i = 0; i < itemList.size(); i++){
+            for(int j = 0; j < itemList.size() - 1; j++){
+                if (Objects.equals(itemList.get(j).getDueDate(), "No Due Date") || itemList.get(j).getDueDate().compareTo(itemList.get(j+1).getDueDate()) > 0){
+                    Collections.swap(itemList, j, j + 1);
+                }
+            }
+        }
     }
 
     public List<events> getCompletedList(){

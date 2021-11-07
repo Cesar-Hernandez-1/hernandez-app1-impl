@@ -25,7 +25,7 @@ public class TodoListApplication extends Application{
                 FXMLLoader.load(Objects.requireNonNull(getClass().getResource("toDoListApplication.fxml")));
 
         Scene scene = new Scene(root);
-        stage.setTitle("ToDo List TodoListApplication");
+        stage.setTitle("ToDo List Application");
         stage.setScene(scene);
         stage.show();
     }
