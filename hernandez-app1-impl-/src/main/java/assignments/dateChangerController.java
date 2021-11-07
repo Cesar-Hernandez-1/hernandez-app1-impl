@@ -13,7 +13,13 @@ import javafx.stage.Stage;
 public class dateChangerController {
 
     public String getNewDate(){
-        return changeDatePicker.getValue().toString();
+        String date = "";
+        try{
+            date = changeDatePicker.getValue().toString();
+            return date;
+        }catch (Exception e){
+            return "No Due Date";
+        }
     }
 
     @FXML
